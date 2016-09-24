@@ -1,5 +1,8 @@
-import {Component,Input} from '@angular/core';
-import { Hero } from './hero'
+import {Component,Input, OnInit} from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+//import { Hero } from './hero';
+
+import { HeroService } from './hero.service';
 
 @Component({
    selector:'my-hero-detail',
@@ -14,8 +17,24 @@ import { Hero } from './hero'
       </div>
    `
 })
-export class HeroDetailComponent{
+export class HeroDetailComponent OnInit {
+
+  ngOnInit(): void {
+    this.route.params.forEach((params: Params) => {
+      let id = +params['id'];
+      this.heroService.getHero(id)
+        .then(hero => this.hero = hero);
+    });
+  }
+  constructor(
+    private heroService: HeroService,
+    private route: ActivatedRoute
+  ){}
   // 使用@Input 装饰器将hero声明为输入属性
   @Input()
   hero:Hero
+  getHero(id: number): Promise<Hero> {
+    return this.getHeroes()
+               .then(heroes => heroes.find(hero => hero.id === id));
+  }
 }
