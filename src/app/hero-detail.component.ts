@@ -1,27 +1,20 @@
 import {Component,Input, OnInit} from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
-//import { Hero } from './hero';
 
+import { Hero } from './hero';
 import { HeroService } from './hero.service';
 
 @Component({
    selector:'my-hero-detail',
-   template:`
-      <div *ngIf="hero">
-        <h2>{{hero.name}} details!</h2>
-        <div><label>id: </label>{{hero.id}}</div>
-        <div>
-          <label>name: </label>
-          <input [(ngModel)]="hero.name" placeholder="name"/>
-        </div>
-      </div>
-   `
+   templateUrl:'hero-detail.component.html',
+   styleUrls:['hero-detail.component.css']
 })
-export class HeroDetailComponent OnInit {
+export class HeroDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.forEach((params: Params) => {
       let id = +params['id'];
+      console.log(id);
       this.heroService.getHero(id)
         .then(hero => this.hero = hero);
     });
@@ -32,9 +25,9 @@ export class HeroDetailComponent OnInit {
   ){}
   // 使用@Input 装饰器将hero声明为输入属性
   @Input()
-  hero:Hero
-  getHero(id: number): Promise<Hero> {
-    return this.getHeroes()
-               .then(heroes => heroes.find(hero => hero.id === id));
+  hero:Hero;
+
+  goBack(): void {
+    window.history.back();
   }
 }
